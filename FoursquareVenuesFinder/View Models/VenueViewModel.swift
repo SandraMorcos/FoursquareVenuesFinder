@@ -32,10 +32,14 @@ class VenueViewModel {
                 var string: NSAttributedString
                 if index <= price {
                     string = NSAttributedString(string: "$",
-                                                attributes: [.foregroundColor: UIColor.green])
+                                                attributes: [.foregroundColor: UIColor(red: 38/255,
+                                                                                       green: 110/255,
+                                                                                       blue: 60/255, alpha: 1),
+                                                             .font: UIFont.systemFont(ofSize: 12, weight: .semibold)])
                 } else {
                     string = NSAttributedString(string: "$",
-                                                attributes: [.foregroundColor: UIColor.gray])
+                                                attributes: [.foregroundColor: UIColor.gray,
+                                                             .font: UIFont.systemFont(ofSize: 12, weight: .semibold)])
                 }
                 attributedText.append(string)
             }
@@ -47,7 +51,11 @@ class VenueViewModel {
     init(venue: Place) {
         fsqid = venue.fsqID
         name = venue.name
-        address = (venue.location.address ?? "") + ", " + (venue.location.neighborhood?.first ?? "")
+        address = (venue.location.address ?? "-")
+        if let neighborhoods = venue.location.neighborhood,
+           neighborhoods.count > 0 {
+            address += ", \(neighborhoods[0])"
+        }
         if venue.photos.count > 0 {
             let photo = venue.photos[0]
             photoURL = photo.photoPrefix + "original" + photo.suffix
